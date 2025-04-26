@@ -1,0 +1,242 @@
+// Импорт шрифтов
+@import url('https://fonts.googleapis.com/css?family=Source+Code+Pro:400,500,600,700|Source+Sans+Pro:400,600,700&display=swap');
+
+// Базовые переменные
+$color-bg: #ddeefc;
+$color-white: #fff;
+$color-primary: #6ab2ff;
+$color-primary-hover: #009edc;
+$color-text-gray: #737373;
+$color-border: rgb(190, 190, 190);
+$shadow-default: 0 10px 20px rgba(0, 0, 0, 0.2);
+$transition: all 0.3s ease;
+
+// Общие стили
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: $color-bg;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  font-family: 'Source Sans Pro', sans-serif;
+}
+
+// Компоненты
+.wallpaper {
+  margin-top: 100px;
+  width: 500px;
+  height: 500px;
+  background-color: $color-white;
+  border-radius: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-shadow: $shadow-default;
+  position: relative;
+  overflow: visible;
+}
+
+.card {
+  position: absolute;
+  top: -115px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  perspective: 800px;
+
+  &__front,
+  &__back {
+    width: 400px;
+    height: 230px;
+    border-radius: 10px;
+    background: linear-gradient(to top right, #cacaca, #3c6473);
+    padding: 15px;
+    box-shadow: $shadow-default;
+    backface-visibility: hidden;
+    position: absolute;
+    transition: transform 500ms ease-in-out;
+  }
+
+  &__back {
+    transform: rotateY(180deg);
+    display: flex;
+    flex-direction: column;
+
+    .logo-back {
+      opacity: 0.5;
+      align-self: flex-end;
+    }
+
+    .black-line {
+      width: calc(100% + 30px);
+      height: 40px;
+      margin: 0 -15px;
+      background-color: #000;
+      opacity: 0.7;
+    }
+
+    .cvc {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+
+      &__number {
+        font-size: 24px;
+        background-color: #f8f4d2;
+        width: 45%;
+        text-align: right;
+        border-radius: 5px;
+      }
+
+      &__text {
+        font-size: 24px;
+      }
+    }
+  }
+}
+
+// Лицевая сторона карты
+.front {
+  &__header,
+  &__middle {
+    display: flex;
+    justify-content: space-between;
+  }
+
+  &__header {
+    font-size: 16px;
+    color: #e8e8e8;
+    margin-bottom: 20px;
+  }
+
+  &__card-number {
+    font-size: 30px;
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+  }
+}
+
+.footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  height: 70px;
+  gap: 10px;
+
+  &__card-holders {
+    flex-grow: 1;
+    height: 100%;
+    border: 1px solid black;
+    border-radius: 5px;
+    font-size: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-inline-start: 10px;
+    transition: background-color 0.3s ease;
+  }
+
+  &__expire-date {
+    font-size: 20px;
+  }
+}
+
+// Форма
+.form {
+  margin-top: 100px;
+
+  input,
+  select {
+    border: 1px solid $color-border;
+    border-radius: 5px;
+    font-size: 20px;
+    text-align: center;
+    transition: $transition;
+
+    &:focus {
+      outline: none;
+      box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+      border-color: $color-primary;
+    }
+  }
+
+  &__footer {
+    display: flex;
+    justify-content: space-between;
+    padding-top: 30px;
+  }
+
+  &__submit,
+  .github-button {
+    width: 400px;
+    height: 60px;
+    font-size: 25px;
+    color: $color-white;
+    border-radius: 5px;
+    border: none;
+    box-shadow: $shadow-default;
+    transition: $transition;
+    cursor: pointer;
+
+    &:hover {
+      transform: translateY(-2px);
+    }
+
+    &:active {
+      transform: translateY(0);
+    }
+  }
+
+  &__submit {
+    background-color: $color-primary;
+
+    &:hover {
+      background-color: $color-primary-hover;
+    }
+  }
+}
+
+.github-button {
+  margin-top: 20px;
+  background-color: #353535;
+
+  &:hover {
+    background-color: $color-primary-hover;
+  }
+
+  a {
+    text-decoration: none;
+    color: $color-white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+}
+
+// Вспомогательные классы
+.to-backface {
+  .card__front {
+    transform: rotateY(-180deg);
+  }
+
+  .card__back {
+    transform: rotateY(0deg);
+  }
+}
+
+.selected {
+  background-color: #cacaca;
+}
