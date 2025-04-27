@@ -1,76 +1,154 @@
-// Элементы DOM
-const elements = {
-  inputCvc: document.querySelector('#cvc-input'),
-  cvc: document.querySelector('#cvc__number'),
-  card: document.querySelector('#card'),
-  cardNumber: document.querySelector('[data-card-number]'),
-  inputCardNumber: document.querySelector('#input-card-number'),
-  cardHolders: document.querySelector('#holders-name'),
-  inputCardHolders: document.querySelector('#input-card-holders'),
-  year: document.getElementById('year-card'),
-  month: document.getElementById('month-card'),
-  inputYear: document.getElementById('year'),
-  inputMonth: document.getElementById('month')
-};
+//CVC
+const inputCvc = document.querySelector('#cvc-input');
+const cvc = document.querySelector('#cvc__number');
+const card = document.querySelector('#card');
 
-// Обработчики CVC
-elements.inputCvc.addEventListener('focus', () => {
-  elements.card.classList.add('to-backface');
+inputCvc.addEventListener('focus', () => {
+  card.classList.add('to-backface');
+});
+inputCvc.addEventListener('focusout', () => {
+  card.classList.remove('to-backface');
+});
+inputCvc.addEventListener('keyup', () => {
+  // Оставляем только цифры
+  inputCvc.value = inputCvc.value.replace(/\D/g, '');
+
+  // Выводим значение или "•••", если пусто
+  cvc.textContent = inputCvc.value || '•••';
 });
 
-elements.inputCvc.addEventListener('focusout', () => {
-  elements.card.classList.remove('to-backface');
-});
+//NUMBER CARD
+const cardNumber = document.querySelector('[data-card-Number]');
+const inputCardNumber = document.querySelector('#input-card-number');
 
-elements.inputCvc.addEventListener('keyup', () => {
-  elements.inputCvc.value = elements.inputCvc.value.replace(/\D/g, '');
-  elements.cvc.textContent = elements.inputCvc.value || '•••';
+inputCardNumber.addEventListener('focus', () => {
+  cardNumber.classList.add('selected');
 });
-
-// Обработчики номера карты
-elements.inputCardNumber.addEventListener('focus', () => {
-  elements.cardNumber.classList.add('selected');
+inputCardNumber.addEventListener('focusout', () => {
+  cardNumber.classList.remove('selected');
 });
-
-elements.inputCardNumber.addEventListener('focusout', () => {
-  elements.cardNumber.classList.remove('selected');
-});
-
-elements.inputCardNumber.addEventListener('keydown', (e) => {
-  if ([4, 9, 14].includes(elements.inputCardNumber.value.length) {
-    elements.inputCardNumber.value += ' ';
+inputCardNumber.addEventListener('keydown', (e) => {
+  if (inputCardNumber.value.length === 4 && e.key !== 'Backspace') {
+    inputCardNumber.value += ' ';
+  }
+  if (inputCardNumber.value.length === 9 && e.key !== 'Backspace') {
+    inputCardNumber.value += ' ';
+  }
+  if (inputCardNumber.value.length === 14 && e.key !== 'Backspace') {
+    inputCardNumber.value += ' ';
   }
 });
+inputCardNumber.addEventListener('keyup', (e) => {
+  inputCardNumber.value = inputCardNumber.value.replace(/[^\d\s]/g, ''); // Удаляет всё, кроме цифр и пробелов
+  cardNumber.setAttribute('data-card-number', inputCardNumber.value.replaceAll(' ', '').padEnd(16, '#'));
 
-elements.inputCardNumber.addEventListener('keyup', () => {
-  elements.inputCardNumber.value = elements.inputCardNumber.value.replace(/[^\d\s]/g, '');
-  const rawValue = elements.inputCardNumber.value.replaceAll(' ', '').padEnd(16, '#');
-  elements.cardNumber.setAttribute('data-card-number', rawValue);
-  
-  Array.from(elements.cardNumber.children).forEach((item, idx) => {
-    item.textContent = rawValue.slice(4 * idx, 4 * (idx + 1));
+  Array.from(cardNumber.children).forEach((item, idx) => {
+    item.innerHTML = cardNumber.getAttribute('data-card-number').slice(4 * idx, 4 * (idx + 1));
   });
 });
 
-// Обработчики имени владельца
-elements.inputCardHolders.addEventListener('focus', () => {
-  elements.cardHolders.classList.add('selected');
+//HOLDERS CARD
+const cardHolders = document.querySelector('#holders-name');
+const inputCardHolders = document.querySelector('#input-card-holders');
+
+inputCardHolders.addEventListener('focus', () => {
+  cardHolders.classList.add('selected');
+});
+inputCardHolders.addEventListener('focusout', () => {
+  cardHolders.classList.remove('selected');
 });
 
-elements.inputCardHolders.addEventListener('focusout', () => {
-  elements.cardHolders.classList.remove('selected');
+inputCardHolders.addEventListener('keyup', () => {
+  // Оставляем только буквы и пробелы
+  inputCardHolders.value = inputCardHolders.value.replace(/[^a-zA-Z\s]/g, '');
+
+  inputCardHolders.value = inputCardHolders.value.toUpperCase();
+  // Выводим значение или "•••", если пусто
+  cardHolders.textContent = inputCardHolders.value || 'FIRST NAME SECOND NAME';
 });
 
-elements.inputCardHolders.addEventListener('keyup', () => {
-  elements.inputCardHolders.value = elements.inputCardHolders.value.replace(/[^a-zA-Z\s]/g, '').toUpperCase();
-  elements.cardHolders.textContent = elements.inputCardHolders.value || 'FIRST NAME SECOND NAME';
+//DATE
+
+const year = document.getElementById('year-card');
+const month = document.getElementById('month-card');
+
+const inputYear = document.getElementById('year');
+const inputMonth = document.getElementById('month');
+
+inputMonth.addEventListener('change', () => {
+  month.innerHTML = inputMonth.value;
+});
+inputYear.addEventListener('change', () => {
+  year.innerHTML = inputYear.value;
 });
 
-// Обработчики даты
-elements.inputMonth.addEventListener('change', () => {
-  elements.month.textContent = elements.inputMonth.value;
+//LOGO
+const cardLogo = document.getElementById('card-logo');
+const cardInput = document.getElementById('input-card-number');
+
+// Функция для установки логотипа
+function setCardLogo(type) {
+  cardLogo.innerHTML = '';
+
+  if (type === 'visa') {
+    cardLogo.innerHTML = `
+        <svg width="54" height="18" viewBox="0 0 54 18" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M19.0283 17.7945L21.7527 0.35631H26.1103L23.3839 17.7945H19.0283Z" fill="#0E4595"/>
+<path d="M39.1272 0.7324C38.264 0.379116 36.9112 0 35.2217 0C30.9159 0 27.883 2.36511 27.8571 5.7548C27.8328 8.26047 30.0224 9.65829 31.6753 10.4924C33.3715 11.3473 33.9417 11.8924 33.9335 12.6555C33.9227 13.8245 32.579 14.3583 31.3264 14.3583C29.5824 14.3583 28.6558 14.094 27.2247 13.4431L26.6631 13.1659L26.0516 17.0696C27.0694 17.5565 28.9514 17.9781 30.9057 18C35.4863 18 38.46 15.6619 38.4938 12.0421C38.5101 10.0583 37.3492 8.54882 34.8351 7.30422C33.312 6.49753 32.3792 5.95923 32.3891 5.14239C32.3891 4.41756 33.1786 3.64249 34.8847 3.64249C36.3095 3.61835 37.3419 3.95729 38.1461 4.31058L38.5366 4.5118L39.1272 0.7324Z" fill="#0E4595"/>
+<path d="M50.3407 0.356222H46.9736C45.9304 0.356222 45.1498 0.666748 44.6917 1.80231L38.2201 17.7831H42.796C42.796 17.7831 43.5441 15.6344 43.7133 15.1626C44.2133 15.1626 48.6586 15.1701 49.294 15.1701C49.4244 15.7806 49.8242 17.7831 49.8242 17.7831H53.8677L50.3407 0.356222ZM44.9983 11.6164C45.3588 10.6117 46.7345 6.74169 46.7345 6.74169C46.7089 6.7881 47.0923 5.73208 47.3122 5.07736L47.6068 6.58082C47.6068 6.58082 48.4412 10.7433 48.6155 11.6161H44.9983V11.6164Z" fill="#0E4595"/>
+<path d="M0.0556672 0.356298L0 0.719048C1.72259 1.17388 3.26111 1.83218 4.60809 2.6511L8.47465 17.7665L13.0851 17.761L19.9454 0.356298H15.3292L11.0631 12.2479L10.6087 9.83111C10.5874 9.75644 10.5642 9.68164 10.5406 9.60667L9.05748 1.82852C8.79378 0.72431 8.02877 0.39478 7.08233 0.356298H0.0556672Z" fill="#0E4595"/>
+</svg>
+`;
+  } else if (type === 'mastercard') {
+    cardLogo.innerHTML = `
+        <svg width="53" height="41" viewBox="0 0 53 41" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                  d="M9.45952 40.299V37.6154C9.45952 36.5863 8.83317 35.9157 7.8051 35.9157C7.26514 35.9157 6.68739 36.0949 6.28458 36.6716C5.97141 36.1791 5.52865 35.9157 4.8537 35.9157C4.60276 35.9048 4.35304 35.9563 4.12689 36.0656C3.90074 36.175 3.70521 36.3386 3.55781 36.542V36.002H2.70792V40.2958H3.55781V37.839C3.55781 37.083 4.00489 36.7213 4.63124 36.7213C5.25759 36.7213 5.61504 37.1241 5.61504 37.839V40.299H6.46493V37.839C6.46493 37.083 6.91201 36.7213 7.53836 36.7213C8.16471 36.7213 8.52216 37.1241 8.52216 37.839V40.299H9.45952ZM23.4141 36.0496H21.8482V34.7537H21.0005V36.0496H20.1064V36.8055H21.0005V38.8228C21.0005 39.8066 21.358 40.3886 22.4314 40.3886C22.8381 40.3802 23.2365 40.2727 23.5923 40.0755L23.3234 39.3195C23.0821 39.4703 22.8023 39.548 22.5178 39.5431C22.0707 39.5431 21.8472 39.2742 21.8472 38.8271V36.7709H23.413V36.055L23.4141 36.0496ZM31.3752 35.9157C31.1437 35.9105 30.9149 35.9655 30.711 36.0753C30.5071 36.1851 30.3352 36.3459 30.2121 36.542V36.002H29.3623V40.2958H30.2121V37.8843C30.2121 37.1683 30.5696 36.7213 31.1517 36.7213C31.3481 36.7292 31.543 36.7593 31.7327 36.8109L32.0016 36.0053C31.7965 35.9536 31.5866 35.9235 31.3752 35.9157ZM19.3439 36.3627C18.8969 36.0496 18.2705 35.9157 17.5999 35.9157C16.5264 35.9157 15.8558 36.4081 15.8558 37.258C15.8558 37.974 16.3483 38.3757 17.2867 38.5107L17.7338 38.555C18.2262 38.6446 18.5394 38.8238 18.5394 39.0474C18.5394 39.3606 18.1819 39.5873 17.5102 39.5873C16.9974 39.5979 16.495 39.4409 16.0794 39.1403L15.6323 39.8109C16.2586 40.258 17.0189 40.3508 17.4681 40.3508C18.7208 40.3508 19.3915 39.7698 19.3915 38.9642C19.3915 38.2083 18.8515 37.8465 17.9152 37.7115L17.4681 37.6673C17.0653 37.623 16.7122 37.488 16.7122 37.2202C16.7122 36.907 17.0696 36.6802 17.5621 36.6802C18.102 36.6802 18.6355 36.9038 18.9044 37.0377L19.3439 36.3627ZM32.3147 38.1521C32.3147 39.448 33.1646 40.3886 34.5512 40.3886C35.1776 40.3886 35.6247 40.2547 36.0717 39.8962L35.6247 39.2256C35.3081 39.4819 34.9143 39.6239 34.507 39.6284C33.751 39.6284 33.1646 39.0474 33.1646 38.1975C33.1646 37.3476 33.7435 36.7709 34.507 36.7709C34.9143 36.7755 35.3081 36.9174 35.6247 37.1737L36.0717 36.5031C35.6247 36.1457 35.1776 36.0107 34.5512 36.0107C33.2089 35.9211 32.3147 36.8606 32.3147 38.1575V38.1521ZM26.3212 35.9157C25.0685 35.9157 24.2186 36.8098 24.2186 38.1521C24.2186 39.4945 25.1128 40.3886 26.4098 40.3886C27.0408 40.402 27.6569 40.1967 28.1538 39.8076L27.7068 39.1813C27.3474 39.4598 26.9086 39.6164 26.4541 39.6284C25.8731 39.6284 25.2467 39.2709 25.1582 38.5107H28.3342V38.1532C28.3342 36.8109 27.5286 35.9167 26.3212 35.9167V35.9157ZM26.277 36.7213C26.9033 36.7213 27.3504 37.1241 27.3947 37.7947H25.0696C25.2035 37.1683 25.6096 36.7213 26.277 36.7213ZM14.6928 38.1521V36.0053H13.8429V36.5452C13.5297 36.1424 13.0869 35.9189 12.4563 35.9189C11.2489 35.9189 10.3537 36.8584 10.3537 38.1554C10.3537 39.4524 11.2478 40.3919 12.4563 40.3919C13.0826 40.3919 13.5297 40.1683 13.8429 39.7655V40.3055H14.6928V38.1521ZM11.2489 38.1521C11.2489 37.3465 11.7414 36.7213 12.5913 36.7213C13.3969 36.7213 13.8871 37.3476 13.8871 38.1521C13.8871 39.002 13.3472 39.583 12.5913 39.583C11.7414 39.6273 11.2489 38.9567 11.2489 38.1521ZM44.3028 35.9157C44.0713 35.9105 43.8425 35.9655 43.6386 36.0753C43.4347 36.1851 43.2628 36.3459 43.1398 36.542V36.002H42.2899V40.2958H43.1387V37.8843C43.1387 37.1683 43.4961 36.7213 44.0782 36.7213C44.2746 36.7292 44.4695 36.7593 44.6592 36.8109L44.9281 36.0053C44.723 35.9536 44.5131 35.9235 44.3017 35.9157H44.3028ZM40.9929 38.1521V36.0053H40.143V36.5452C39.8298 36.1424 39.3871 35.9189 38.7564 35.9189C37.5491 35.9189 36.6538 36.8584 36.6538 38.1554C36.6538 39.4524 37.548 40.3919 38.7564 40.3919C39.3827 40.3919 39.8298 40.1683 40.143 39.7655V40.3055H40.9929V38.1521ZM37.5491 38.1521C37.5491 37.3465 38.0415 36.7213 38.8914 36.7213C39.697 36.7213 40.1873 37.3476 40.1873 38.1521C40.1873 39.002 39.6473 39.583 38.8914 39.583C38.0415 39.6273 37.5491 38.9567 37.5491 38.1521ZM49.6257 38.1521V34.3055H48.7758V36.542C48.4626 36.1392 48.0199 35.9157 47.3892 35.9157C46.1819 35.9157 45.2866 36.8552 45.2866 38.1521C45.2866 39.4491 46.1808 40.3886 47.3892 40.3886C48.0155 40.3886 48.4626 40.1651 48.7758 39.7623V40.3022H49.6257V38.1521ZM46.1819 38.1521C46.1819 37.3465 46.6743 36.7213 47.5242 36.7213C48.3298 36.7213 48.8201 37.3476 48.8201 38.1521C48.8201 39.002 48.2801 39.583 47.5242 39.583C46.6732 39.6284 46.1808 38.9578 46.1808 38.1521H46.1819Z"
+                  fill="black"
+                />
+                <path d="M18.3601 3.44384H33.8806V28.7591H18.3601V3.44384Z" fill="#FF5F00" />
+                <path
+                  d="M19.926 16.1015C19.9265 13.6661 20.478 11.2625 21.5391 9.07045C22.6003 6.87844 24.1435 4.95489 26.0534 3.44384C23.6782 1.57637 20.8255 0.414875 17.8214 0.0921325C14.8173 -0.23061 11.7829 0.298421 9.06527 1.61875C6.34761 2.93908 4.05627 4.99744 2.4532 7.55851C0.850126 10.1196 0 13.08 0 16.1015C0 19.1229 0.850126 22.0833 2.4532 24.6444C4.05627 27.2055 6.34761 29.2638 9.06527 30.5842C11.7829 31.9045 14.8173 32.4335 17.8214 32.1108C20.8255 31.7881 23.6782 30.6266 26.0534 28.7591C24.1435 27.248 22.6003 25.3245 21.5391 23.1325C20.478 20.9405 19.9265 18.5368 19.926 16.1015Z"
+                  fill="#EB001B"
+                />
+                <path
+                  d="M52.13 16.1015C52.1322 19.1207 51.2846 22.0796 49.6841 24.6397C48.0837 27.1998 45.795 29.2578 43.0799 30.5783C40.3647 31.8988 37.3328 32.4285 34.3307 32.1068C31.3287 31.7851 28.4778 30.6249 26.1042 28.7591C28.0145 27.2484 29.5581 25.325 30.6193 23.1329C31.6805 20.9408 32.2317 18.5369 32.2317 16.1015C32.2317 13.666 31.6805 11.2622 30.6193 9.07006C29.5581 6.87796 28.0145 4.9545 26.1042 3.44384C28.4778 1.57798 31.3287 0.417851 34.3307 0.0961308C37.3328 -0.22559 40.3647 0.304092 43.0799 1.62459C45.795 2.9451 48.0837 5.0031 49.6841 7.56323C51.2846 10.1234 52.1322 13.0822 52.13 16.1015Z"
+                  fill="#F79E1B"
+                />
+              </svg>`;
+  } else if (type === 'mir') {
+    cardLogo.innerHTML = `
+        <svg  width="53" height="15" viewBox="0 0 53 15" fill="none" xmlns="http://www.w3.org/2000/svg">
+<path d="M37.6082 6.67642V14.769H42.1041V9.97341H47.1995C49.3425 9.95843 51.1634 8.58718 51.8528 6.67642H37.6082Z" fill="#37A72E"/>
+<path d="M37.0088 0.00749397C37.271 3.31198 40.4032 5.9271 44.2247 5.9271H52.0401C52.1 5.62737 52.13 5.31266 52.13 4.99045C52.13 2.24795 49.9195 0.0299735 47.1845 0.00749397H37.0088Z" fill="url(#paint0_linear_1_9)"/>
+<path d="M30.3548 5.84467C30.4073 5.75476 30.4897 5.70231 30.5946 5.70231C30.7445 5.70231 30.8569 5.8222 30.8644 5.96457V14.6941H35.3603V0.00749397H30.8644C30.2949 0.0299735 29.6505 0.442098 29.4107 0.959127L25.8365 8.63214C25.829 8.66211 25.814 8.69208 25.799 8.72205C25.7465 8.79698 25.6566 8.84944 25.5517 8.84944C25.3869 8.84944 25.252 8.71456 25.252 8.54971V0.00749397H20.7561V14.6941H25.252C25.814 14.6641 26.4434 14.252 26.6832 13.7425L30.3548 5.86715C30.3473 5.85966 30.3548 5.85217 30.3548 5.84467Z" fill="#37A72E"/>
+<path d="M13.5701 6.09944L10.94 14.6941H7.70298L5.08037 6.09195C5.05789 5.95707 4.938 5.85217 4.78814 5.85217C4.62329 5.85217 4.4959 5.98704 4.4959 6.1444V14.6866H0V0H3.85898H5.00544C5.82969 0 6.6989 0.644413 6.93868 1.4312L9.12669 8.58718C9.23908 8.94685 9.41143 8.93935 9.52382 8.58718L11.7118 1.4312C11.9516 0.63692 12.8208 0 13.6451 0H14.7915H18.6505V14.6866H14.1546V6.1444C14.1546 6.1444 14.1546 6.1444 14.1546 6.13691C14.1546 5.97206 14.0197 5.84467 13.8624 5.84467C13.7125 5.85217 13.5926 5.95707 13.5701 6.09944Z" fill="#37A72E"/>
+<defs>
+<linearGradient id="paint0_linear_1_9" x1="37.0106" y1="2.9673" x2="52.1291" y2="2.9673" gradientUnits="userSpaceOnUse">
+<stop stop-color="#00A0E5"/>
+<stop offset="1" stop-color="#0077C3"/>
+</linearGradient>
+</defs>
+</svg>
+`;
+  }
+}
+
+// Обработчик ввода
+cardInput.addEventListener('input', function (e) {
+  const cardNumber = e.target.value.replace(/\s/g, '');
+
+  if (/^4/.test(cardNumber)) {
+    setCardLogo('visa');
+  } else if (/^5[1-5]/.test(cardNumber)) {
+    setCardLogo('mastercard');
+  } else if (/^2/.test(cardNumber)) {
+    setCardLogo('mir');
+  } else if (cardNumber === '') {
+    // Если поле пустое - возвращаем Mastercard
+    setCardLogo('mastercard');
+  }
 });
 
-elements.inputYear.addEventListener('change', () => {
-  elements.year.textContent = elements.inputYear.value;
-});
+// Инициализация - устанавливаем Mastercard при загрузке
+setCardLogo('mastercard');

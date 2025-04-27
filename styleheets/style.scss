@@ -14,12 +14,11 @@ $transition: all 0.3s ease;
 // Общие стили
 * {
   box-sizing: border-box;
-  margin: 0;
-  padding: 0;
 }
 
 body {
   background: $color-bg;
+  margin: 0;
   min-height: 100vh;
   display: flex;
   justify-content: center;
@@ -28,13 +27,13 @@ body {
   font-family: 'Source Sans Pro', sans-serif;
 }
 
-// Компоненты
+// Компонент: Карточка
 .wallpaper {
   margin-top: 100px;
-  width: 500px;
   height: 500px;
-  background-color: $color-white;
+  width: 500px;
   border-radius: 30px;
+  background-color: $color-white;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -50,7 +49,6 @@ body {
   display: flex;
   justify-content: center;
   perspective: 800px;
-
   &__front,
   &__back {
     width: 400px;
@@ -65,9 +63,9 @@ body {
   }
 
   &__back {
-    transform: rotateY(180deg);
     display: flex;
     flex-direction: column;
+    transform: rotateY(180deg);
 
     .logo-back {
       opacity: 0.5;
@@ -76,8 +74,9 @@ body {
 
     .black-line {
       width: calc(100% + 30px);
+      margin-left: -15px;
+      margin-right: -15px;
       height: 40px;
-      margin: 0 -15px;
       background-color: #000;
       opacity: 0.7;
     }
@@ -103,18 +102,21 @@ body {
   }
 }
 
-// Лицевая сторона карты
+// Стили для лицевой стороны карты
 .front {
-  &__header,
-  &__middle {
+  &__header {
     display: flex;
     justify-content: space-between;
-  }
-
-  &__header {
     font-size: 16px;
     color: #e8e8e8;
     margin-bottom: 20px;
+  }
+
+  &__middle {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
   }
 
   &__card-number {
@@ -135,8 +137,8 @@ body {
   gap: 10px;
 
   &__card-holders {
-    flex-grow: 1;
     height: 100%;
+    flex-grow: 1;
     border: 1px solid black;
     border-radius: 5px;
     font-size: 30px;
@@ -149,6 +151,7 @@ body {
 
   &__expire-date {
     font-size: 20px;
+    display: flex;
   }
 }
 
@@ -156,6 +159,7 @@ body {
 .form {
   margin-top: 100px;
 
+  // Общие стили для полей ввода
   input,
   select {
     border: 1px solid $color-border;
@@ -171,18 +175,70 @@ body {
     }
   }
 
+  // Секция с датой
+  .expiration-date {
+    font-size: 15px;
+    color: $color-text-gray;
+    margin-bottom: 20px;
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    select {
+      width: 120px;
+      height: 50px;
+    }
+  }
+
+  // Секция CVC
+  .cvc-container {
+    font-size: 15px;
+    color: $color-text-gray;
+    margin-bottom: 20px;
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-weight: 600;
+    }
+
+    input {
+      width: 150px;
+      height: 50px;
+    }
+  }
+
+  // Поля ввода
+  &__card-number,
+  &__card-holders {
+    font-size: 15px;
+    color: $color-text-gray;
+    display: flex;
+    flex-direction: column;
+
+    input {
+      width: 400px;
+      height: 50px;
+    }
+  }
+
+  // Футер формы
   &__footer {
     display: flex;
     justify-content: space-between;
     padding-top: 30px;
   }
 
-  &__submit,
-  .github-button {
+  // Кнопка отправки
+  &__submit {
     width: 400px;
     height: 60px;
     font-size: 25px;
     color: $color-white;
+    background-color: $color-primary;
     border-radius: 5px;
     border: none;
     box-shadow: $shadow-default;
@@ -190,6 +246,7 @@ body {
     cursor: pointer;
 
     &:hover {
+      background-color: $color-primary-hover;
       transform: translateY(-2px);
     }
 
@@ -197,22 +254,28 @@ body {
       transform: translateY(0);
     }
   }
-
-  &__submit {
-    background-color: $color-primary;
-
-    &:hover {
-      background-color: $color-primary-hover;
-    }
-  }
 }
 
+// Кнопка GitHub
 .github-button {
   margin-top: 20px;
+  width: 400px;
+  height: 60px;
+  font-size: 25px;
   background-color: #353535;
+  border-radius: 5px;
+  border: none;
+  box-shadow: $shadow-default;
+  transition: $transition;
+  cursor: pointer;
 
   &:hover {
     background-color: $color-primary-hover;
+    transform: translateY(-2px);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 
   a {
@@ -226,12 +289,10 @@ body {
   }
 }
 
-// Вспомогательные классы
 .to-backface {
   .card__front {
     transform: rotateY(-180deg);
   }
-
   .card__back {
     transform: rotateY(0deg);
   }
@@ -240,3 +301,4 @@ body {
 .selected {
   background-color: #cacaca;
 }
+
